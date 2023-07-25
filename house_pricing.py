@@ -8,6 +8,7 @@ for this task, here is the process to create the madel.
 """
 
 from matplotlib import pyplot as plt
+import scipy
 import tensorflow as tf
 import pandas as pd
 import numpy as np
@@ -37,19 +38,19 @@ print(housing.describe())
 # Now we are going to plot the dataset with matplotlib
 # plot the histogram for all numerical fields
 
-#housing.hist(bins=50, figsize=(20, 15))
+# housing.hist(bins=50, figsize=(20, 15))
 # plt.show()
 
 # examine the values type of the feature "SaleType"
 
-#print(housing["SaleType"].value_counts())
+# print(housing["SaleType"].value_counts())
 
-#print(housing.head())
+# print(housing.head())
 # return all the features
-#print(housing.columns)
+# print(housing.columns)
 # return all the types
 
-#print(housing.dtypes)
+# print(housing.dtypes)
 
 
 """
@@ -170,12 +171,12 @@ def plot_the_loss_curve(epochs, rmse):
 print("Defined the plot_the_model and plot_the_loss_curve functions.")
 
 # The following variables are the hyperparameters.
-learning_rate = 0.01
-epochs = 60
+learning_rate = 0.001
+epochs = 300
 batch_size = 30
 
 # Specify the feature and the label.
-my_feature = "LotArea"
+my_feature = "OverallQual"
 my_label = "SalePrice"
 
 # Discard any pre-existing version of the model.
@@ -193,3 +194,24 @@ print("The learned bias for your model is %.4f\n" % bias)
 
 plot_the_model(weight, bias, my_feature, my_label)
 plot_the_loss_curve(epochs, rmse)
+
+# print(housing[my_feature].values)
+
+# print(scipy.stats.pearsonr(
+# housing[my_feature].values.tolist(), housing[my_label]))
+# print(housing.columns.values)
+# print(housing.dtypes.values)
+feature_correlation = {}
+for i in range(len(housing.columns.values)):
+    if housing.dtypes.values[i] == 'int64':
+        print(
+            f'Feature : {housing.columns.values[i]}   Correlation coeficient : {scipy.stats.pearsonr(housing[housing.columns.values[i]].values.tolist(), housing[my_label])[0]}')
+
+        feature_correlation[housing.columns.values[i]] = scipy.stats.pearsonr(
+            housing[housing.columns.values[i]].values.tolist(), housing[my_label])[0]
+
+        # sort the dictionnary of features and correlation coefficient
+
+        # sorted_feature_correlation = sorted(feature_correlation.items(), key=lambda x:x[1])
+        # print(sorted_feature_correlation)
+        # sorted_feature_correlation = {list(feature_correlation.keys()): np.argsort(list(feature_correlation.values()))[i] for in}
