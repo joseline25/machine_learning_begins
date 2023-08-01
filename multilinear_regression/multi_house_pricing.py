@@ -17,7 +17,7 @@ print(housing)
 
 my_label = "SalePrice"
 correlations = housing.corr(numeric_only=True)[my_label]
-
+print("the different correlations are: ")
 print(correlations)
 # after printing correlations, we will choose as features
 # feature_one = "TotalBsmtSF"
