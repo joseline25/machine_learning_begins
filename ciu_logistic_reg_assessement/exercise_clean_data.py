@@ -1,11 +1,14 @@
 import numpy as np
 import pandas as pd
-
+import seaborn as sns
 
 from sklearn.metrics import accuracy_score
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import normalize
+
+
+import pickle
 
 # load data
 data = pd.read_csv("../messy_trash_pickup_dataset.csv")
@@ -40,7 +43,7 @@ data["Public_Holiday"] = data["Public_Holiday"].fillna(
 print(data.isnull().sum())
 
 
-# cleaning dataù
+# cleaning data
 
 # 1 - remove irrelevant columns
 
@@ -81,12 +84,14 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 
 # train the logistic model
-model = LogisticRegression()
+model = LogisticRegression(C=0.1)
 model.fit(X_train, y_train)
 
 # make predictions on the test set
 
 y_pred = model.predict(X_test)
+
+print("X_test ", X_test)
 
 accuracy_monday = accuracy_score(y_test, y_pred)
 print("Accuracy for Monday", accuracy_monday)
@@ -107,7 +112,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 
 # train the logistic model
-model = LogisticRegression()
+model = LogisticRegression(C=0.1)
 model.fit(X_train, y_train)
 
 # make predictions on the test set
@@ -133,7 +138,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 
 # train the logistic model
-model = LogisticRegression()
+model = LogisticRegression(C=0.1)
 model.fit(X_train, y_train)
 
 # make predictions on the test set
@@ -158,7 +163,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 
 # train the logistic model
-model = LogisticRegression()
+model = LogisticRegression(C=0.1)
 model.fit(X_train, y_train)
 
 # make predictions on the test set
@@ -184,7 +189,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 
 # train the logistic model
-model = LogisticRegression()
+model = LogisticRegression(C=0.1)
 model.fit(X_train, y_train)
 
 # make predictions on the test set
@@ -210,7 +215,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 
 # train the logistic model
-model = LogisticRegression()
+model = LogisticRegression(C=0.1)
 model.fit(X_train, y_train)
 
 # make predictions on the test set
@@ -227,7 +232,9 @@ print("*" * 100)
 
 X_monday = data[['Resident_ID', 'Temperature', 'Weather_Rainy', 'Day_of_Week_Sunday', 'Weather_Sunny',
                  'Previous_Requests', 'Public_Holiday']]
-X_monday = normalize(X_monday, norm='max', axis=0, copy=True, return_norm=False)
+
+# X_monday = normalize(X_monday, norm='max', axis=0,
+#                      copy=True, return_norm=False)
 print(X_monday)
 
 y = data['Trash_Pickup_Request']
@@ -238,7 +245,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 
 # train the logistic model
-model = LogisticRegression()
+model = LogisticRegression(C=0.1)
 model.fit(X_train, y_train)
 
 # make predictions on the test set
@@ -249,3 +256,25 @@ accuracy_sunday = accuracy_score(y_test, y_pred)
 print("Accuracy for Sunday", accuracy_sunday)
 
 
+# Visualize 
+
+# import matplotlib.pyplot as plt
+# plt.figure(figsize=(8,6))
+# sns.countplot(x='Weather', data=data, hue='Trash_Pickup_Request')
+# plt.title("the title")
+# plt.xlabel("Weather conditions")
+# plt.ylabel('Count')
+# plt.show()
+
+# correlation_matrix =  data.corr()
+# plt.figure(figsize=(10, 8))
+# sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm')
+# plt.show()
+
+
+#use pickle
+
+#save the traned model to a file 
+
+with open('model.pkl', 'wb') as file:
+    pickle.dump(model, file)
