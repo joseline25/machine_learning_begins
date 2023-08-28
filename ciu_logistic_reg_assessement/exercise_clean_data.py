@@ -251,6 +251,8 @@ model.fit(X_train, y_train)
 # make predictions on the test set
 
 y_pred = model.predict(X_test)
+print("y_pred", y_pred)
+print(type(y_pred))
 
 accuracy_sunday = accuracy_score(y_test, y_pred)
 print("Accuracy for Sunday", accuracy_sunday)
@@ -278,3 +280,5 @@ print("Accuracy for Sunday", accuracy_sunday)
 
 with open('model.pkl', 'wb') as file:
     pickle.dump(model, file)
+
+# le fichier model.pkl a été crée à l'exécution de ce code
