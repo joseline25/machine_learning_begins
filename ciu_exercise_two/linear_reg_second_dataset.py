@@ -20,6 +20,14 @@ from sklearn.preprocessing import StandardScaler, Normalizer, OneHotEncoder
 data = pd.read_csv("individual_trash_pickup_dataset.csv")
 
 print(data)
+
+# plot the data dataset
+data.plot(kind='scatter', x='Day_of_Week',
+                          y='Resident_Trash_Pickup_Request')
+
+plt.xlabel('Day_of_Week')
+plt.ylabel('Resident_Trash_Pickup_Request')
+plt.show()
 """
 features: Date,Resident_ID,Temperature,Weather,Day_of_Week,Previous_Requests,
 Public_Holiday,Resident_Trash_Pickup_Request
@@ -142,7 +150,6 @@ sns.heatmap(pivot_table, annot=True, cmap='coolwarm')
 plt.show()
 
 
-
 """
 to convert True/False values to 1/0, 
 data['Resident_Trash_Pickup_Request'] = data['Resident_Trash_Pickup_Request'].astype(int)
@@ -157,8 +164,8 @@ data_encoded = pd.get_dummies(data, columns=['Weather', 'Day_of_Week'])
 
 correlation_matrix = data_encoded.corr()
 
-# increase the size of the picture 
-plt.figure(figsize=(10,8))
+# increase the size of the picture
+plt.figure(figsize=(10, 8))
 sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm')
 plt.show()
 
@@ -236,17 +243,40 @@ aggregated_data_good = data.groupby('Date').agg(Resident_Trash_Pickup_Request_Su
 # we can not put resident_id, weather et previous request
 print(aggregated_data_good)
 
+# plot the aggregated_data_good dataset
+aggregated_data_good.plot(kind='scatter', x='Day_of_Week',
+                          y='Resident_Trash_Pickup_Request_Sum')
+
+plt.xlabel('Day_of_Week')
+plt.ylabel('Resident_Trash_Pickup_Request_Sum')
+plt.show()
+
 # Extract features and target variable from aggregated_data_good
-numeric_features = aggregated_data_good[["Public_Holiday"]]
-non_numeric_features = aggregated_data_good[["Date", "Day_of_Week"]]
+numeric_features = ["Public_Holiday"]
+non_numeric_features = ["Date", "Day_of_Week"]
 target = aggregated_data_good["Resident_Trash_Pickup_Request_Sum"]
 
 # Perform feature scaling
+# separate the dataset between numeric features and non numeric features
+aggregated_data_good_numeric = aggregated_data_good[numeric_features]
+aggregated_data_good_non_numeric = aggregated_data_good[non_numeric_features]
+
 scaler = StandardScaler()
-scaled_features = scaler.fit_transform(numeric_features)
+# scale for numerical features
+
+aggregated_data_good_scaled = pd.DataFrame(scaler.fit_transform(
+    aggregated_data_good_numeric), columns=numeric_features)
+# aggregated_data_good.transform(
+# aggregated_data_good_numeric, columns=numeric_features)
+
+
+# combine scaled numeric features and non-numeric features
+data_preprocessed = pd.concat(
+    [aggregated_data_good_scaled, aggregated_data_good_non_numeric], axis=1)
 
 # Split the data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(scaled_features, target, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(
+    data_preprocessed, target, test_size=0.2, random_state=42)
 
 # Create and train the linear regression model
 model = LinearRegression()
