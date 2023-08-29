@@ -179,6 +179,10 @@ data_agg_two = data.groupby("Temperature").agg(
 
 print(data_agg_two)
 
+
+
+# print(data_agg_two)
+
 #on va maintenant travailler avec les données aggrégé autour de Day_of_Week où on peut
 # drop les features Weather et Temperature
 
@@ -248,7 +252,13 @@ plt.ylabel('Daily_Request_Volume')
 plt.show()
 
 
-# sns.heatmap(data.corr(),annot=True)
+# # Compute the correlation matrix
+# corr_matrix = data.corr()
+
+# # Display the correlation matrix using a heatmap
+# plt.figure(figsize=(10, 8))
+# sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', fmt=".2f")
+# plt.title('Correlation Matrix')
 # plt.show()
 
 # Model Building 
@@ -258,7 +268,23 @@ plt.show()
 # Perform one-hot encoding on categorical features
 data_encoded = pd.get_dummies(data, columns=['Day_of_Week', 'Weather'])
 
+print("data encoded ")
 print(data_encoded)
+
+# Map True/False values to 1/0 for correlation calculation
+data_encoded['Day_of_Week_Friday'] = data_encoded['Day_of_Week_Friday'].astype(int)
+data_encoded['Day_of_Week_Monday'] = data_encoded['Day_of_Week_Monday'].astype(int)
+data_encoded['Day_of_Week_Tuesday'] = data_encoded['Day_of_Week_Tuesday'].astype(int)
+data_encoded['Day_of_Week_Wednesday'] = data_encoded['Day_of_Week_Wednesday'].astype(int)
+data_encoded['Day_of_Week_Thursday'] = data_encoded['Day_of_Week_Thursday'].astype(int)
+data_encoded['Day_of_Week_Saturday'] = data_encoded['Day_of_Week_Saturday'].astype(int)
+data_encoded['Day_of_Week_Sunday'] = data_encoded['Day_of_Week_Sunday'].astype(int)
+print(data_encoded)
+
+# nomalize these data
+
+
+
 train_set, test_set = train_test_split(data, test_size=0.2, random_state=42)
 print(train_set)
 
@@ -289,5 +315,34 @@ print(len(y_pred))
 y_pred = model.intercept_ + model.coef_ * x
 print(f"predicted response:\n{y_pred}")
 
-sns.heatmap(data.corr(),annot=True)
+
+
+
+
+
+# Select only the numerical features
+numerical_features = ['Temperature', 'Public_Holiday', 'Daily_Request_Volume']
+
+# Subset the dataset to include only numerical columns
+numerical_data = data[numerical_features]
+
+# Compute the correlation matrix
+corr_matrix = numerical_data.corr()
+
+# Highlighted column
+highlight_col = 'Daily_Request_Volume'
+
+# Create a mask to highlight the specified column
+mask = np.zeros_like(corr_matrix, dtype=bool)
+mask[np.triu_indices_from(mask)] = True
+mask[:, numerical_features.index(highlight_col)] = False
+
+# Display the correlation matrix using a heatmap with the highlighted column
+plt.figure(figsize=(10, 8))
+sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', fmt=".2f", linewidths=0.5,
+            vmin=-1, vmax=1, center=0, cbar_kws={"shrink": 0.7}, mask=mask)
+plt.title('Correlation Matrix (Highlighted Column: {})'.format(highlight_col))
 plt.show()
+
+#c'est pas top
+
