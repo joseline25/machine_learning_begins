@@ -346,3 +346,7 @@ plt.show()
 
 #c'est pas top
 
+# plot the data 
+
+
+
