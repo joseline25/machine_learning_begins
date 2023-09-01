@@ -14,7 +14,7 @@ import holidays
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression, LogisticRegression
 from sklearn.naive_bayes import GaussianNB
-from sklearn.metrics import mean_squared_error, r2_score, accuracy_score, recall_score, precision_score, precision_recall_curve, auc, roc_auc_score, f1_score
+from sklearn.metrics import mean_squared_error,f1_score, r2_score, accuracy_score, recall_score, precision_score, precision_recall_curve, auc, roc_auc_score, f1_score
 from sklearn.preprocessing import StandardScaler, Normalizer, OneHotEncoder, MinMaxScaler
 
 import matplotlib.pyplot as plt
@@ -315,6 +315,8 @@ print("Coefficients:", coefficients)
 print(f"predicted response:\n{y_pred}")
 print(len(y_pred.reshape((-1, 1))))
 print(len(y_test))
+# Work on this !!!!! it should be 0.49..
+print("accuracy Linear regression:", r2_score(y_test, y_pred))
 # Plot the predicted values against the actual values
 plt.scatter(y_test, y_pred)
 plt.xlabel('Actual Values')
@@ -387,6 +389,9 @@ print("Recall: ", recall_score(y_test, prediction))
 print("AUC-ROC: ", roc_auc_score(y_test, prediction))
 
 
+
+
+
 # Naive Bayes
 
 data = data_class
@@ -430,3 +435,5 @@ print("Accuracy:", accuracy)
 print("Precision:", precision)
 print("Recall:", recall)
 print("F1 Score:", f1)
+
+
