@@ -181,7 +181,7 @@ plt.ylabel("Temperature")
 plt.show()
 # we can observe from the figure  that in average, blow 27 of temperature it is rainy.
 
-# now we will correct the wron entries ( check if ther is a better way of doing this)
+# now we will correct the wrong entries ( check if ther is a better way of doing this)
 mask = (data['Temperature'] < 27)
 data.loc[mask, 'Weather'] = data.loc[mask, 'Weather'].replace('Sunny', 'Rainy')
 
